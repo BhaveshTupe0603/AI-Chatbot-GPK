@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SmartBot Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .logout {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: white;
+      border: 1px solid #007bff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .logout:hover {
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>SmartBot Admin Dashboard</h1>
+    <a href="/logout" class="logout">Logout</a>
+  </header>
+
+  <div class="container">
+    <!-- 👥 Users -->
+    <h2>Registered Users</h2>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Updated At</th>
+      </tr>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.updated_at or 'N/A' }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <!-- 🚗 Ride Bookings -->
+<h2>Ride Bookings</h2>
+<table>
+  <tr>
+    <th>Ride ID</th>
+    <th>User</th>
+    <th>Pickup</th>
+    <th>Drop</th>
+    <th>Type</th>
+    <th>Fare (₹)</th>
+    <th>Booked At</th>
+  </tr>
+  {% for ride in rides %}
+  <tr>
+    <td>{{ ride.ride_id }}</td>
+    <td>{{ ride.username }}</td>
+    <td>{{ ride.pickup }}</td>
+    <td>{{ ride.drop_location }}</td>
+    <td>{{ ride.ride_type }}</td>
+    <td>{{ ride.fare }}</td>
+    <td>{{ ride.timestamp }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+
+    <!-- 🛑 Complaints -->
+    <h2>User Complaints</h2>
+    <table>
+      <tr>
+        <th>User ID</th>
+        <th>Description</th>
+        <th>Submitted At</th>
+      </tr>
+      {% for c in complaints %}
+      <tr>
+        <td>{{ c.user_id }}</td>
+        <td>{{ c.message }}</td>
+        <td>{{ c.timestamp }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+</body>
+</html>

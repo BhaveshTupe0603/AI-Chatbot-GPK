@@ -1,0 +1,317 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hello",
+        "Hey",
+        "Good morning",
+        "Good Afternoon",
+        " Good Evening",
+        "What's up"
+      ],
+      "responses": [
+        "Hello! How can I assist you with your ride today?",
+        "Hi there! let's book a ride?",
+        "Greetings! I can help you find a ride ."
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bye",
+        "Goodbye",
+        "Exit",
+        "Quit",
+        "Stop"
+      ],
+      "responses": [
+        "Thanks for using SmartBot. Have a great day!",
+        "Goodbye! Ride safe.",
+        "See you soon. You can come back anytime!"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "Thanks",
+        "Thank you",
+        "Cheers",
+        "Appreciate it"
+      ],
+      "responses": [
+        "You're welcome!",
+        "Anytime!",
+        "Happy to help!"
+      ]
+    },
+    {
+      "tag": "identity",
+      "patterns": [
+        "Who are you?",
+        "What can you do?",
+        "Are you a chatbot?",
+        "What's your name?"
+      ],
+      "responses": [
+        "I\u2019m SmartBot, your AI ride assistant.",
+        "I'm SmartBot. I can help you book rides, track status, or raise issues."
+      ]
+    },
+    {
+      "tag": "book_ride",
+      "patterns": [
+        "Book a ride",
+        "I want to book a ride",
+        "Can you book a cab?",
+        "Book a ride from Bagalur to Hosur",
+        "Get me a ride from my home to the mall",
+        "I need a taxi from airport to railway station",
+        "Ride from office to station"
+      ],
+      "responses": [
+        "Sure! Please provide your pickup and drop locations.",
+        "Let's book your ride. Where should I pick you up and where are you going?"
+      ]
+    },
+    {
+      "tag": "pickup_location",
+      "patterns": [
+        "Pickup is Bagalur",
+        "Start from the mall",
+        "Pick me up from the station",
+        "From airport",
+        "From railway station"
+      ],
+      "responses": [
+        "Got your pickup. Where are you heading?",
+        "Okay, now tell me your drop location."
+      ]
+    },
+    {
+      "tag": "drop_location",
+      "patterns": [
+        "Drop at Hosur",
+        "To airport",
+        "Destination is my college",
+        "Drop me at home",
+        "I want to go to the mall"
+      ],
+      "responses": [
+        "Thanks! What ride would you prefer: Auto, Bike, or Car?",
+        "Great. Do you want to take an Auto, Bike, or Car?"
+      ]
+    },
+    {
+      "tag": "ride_type",
+      "patterns": [
+        "I want a cab",
+        "Book a cab",
+        "I need a taxi",
+        "Can I get a car?",
+        "I want to take a ride in a car",
+        "Book me a bike",
+        "I prefer an auto",
+        "Auto please",
+        "Bike will be fine",
+        "I want a two wheeler",
+        "Book a sedan",
+        "Get me an SUV",
+        "Economy car",
+        "Get me a four wheeler",
+        "Arrange a cab for me",
+        "Taxi option please",
+        "Select bike option",
+        "Give me the cheapest ride",
+        "Luxury car please",
+        "I want a ride on a scooter",
+        "Ola auto",
+        "Uber bike"
+      ],
+      "responses": [
+        "Got it. Booking a {ride_type} for you.",
+        "Okay, let me get the best available {ride_type}.",
+        "You're going with a {ride_type}. Checking availability...",
+        "Ride type selected: {ride_type}. Please wait while I confirm it.",
+        "Great choice! Booking your ride now."
+      ]
+    },
+    {
+      "tag": "confirm_booking",
+      "patterns": [
+        "Yes, confirm booking",
+        "Book now",
+        "Go ahead",
+        "Confirm it",
+        "Confirm my ride"
+      ],
+      "responses": [
+        "Your ride is confirmed! Driver details will be shared shortly.",
+        "Ride booked successfully. Thank you for choosing SmartBot!"
+      ]
+    },
+    {
+      "tag": "cancel_ride",
+      "patterns": [
+        "Cancel my ride",
+        "I want to cancel",
+        "Cancel booking",
+        "Abort ride",
+        "I don't need the ride"
+      ],
+      "responses": [
+        "Your ride has been cancelled. Let us know if you need anything else.",
+        "Booking cancelled. No charges applied."
+      ]
+    },
+    {
+      "tag": "change_ride",
+      "patterns": [
+        "Change ride type",
+        "Switch to car",
+        "I want to change from auto to bike",
+        "Change destination",
+        "Update drop location"
+      ],
+      "responses": [
+        "Sure, you can change your ride or location. What would you like to update?",
+        "Okay. Let me know what you want to change \u2014 ride type, pickup or drop?"
+      ]
+    },
+    {
+      "tag": "rebook_ride",
+      "patterns": [
+        "Rebook my last ride",
+        "Book the same ride again",
+        "Repeat my previous ride"
+      ],
+      "responses": [
+        "Booking your last ride again. Confirm?",
+        "Your previous ride details fetched. Proceed to book again?"
+      ]
+    },
+    {
+      "tag": "schedule_ride",
+      "patterns": [
+        "Schedule a ride",
+        "Book a ride ",
+        "Can I schedule a ride?",
+        "I want to pre-book"
+      
+      ],
+      "responses": [
+        "Sure, I can schedule your ride. What date and time would you like?",
+        "Ride scheduling is available. Please provide pickup & drop."
+      ]
+    },
+    {
+      "tag": "fare_estimate",
+      "patterns": [
+        "How much will it cost?",
+        "Show fare estimate",
+        "Fare from airport to station",
+        "What's the ride price?",
+        "Give me fare details"
+      ],
+      "responses": [
+        "Sure. Please share pickup and drop locations to calculate fare.",
+        "I can calculate the fare for you. Just tell me where you want to go."
+      ]
+    },
+    {
+      "tag": "ride_status",
+      "patterns": [
+        "Where is my ride?",
+        "Track my cab",
+        "Is the driver on the way?",
+        "Ride update",
+        "Ride status"
+      ],
+      "responses": [
+        "Let me check your ride status...",
+        "Tracking your driver. Hang on a second."
+      ]
+    },
+    {
+      "tag": "ride_history",
+      "patterns": [
+        "Show my rides",
+        "What are my past rides?",
+        "Show ride history",
+        "List of previous bookings"
+      ],
+      "responses": [
+        "Here are your last 5 rides: [mock data]",
+        "Sure! Fetching your ride history now..."
+      ]
+    },
+    {
+      "tag": "complaint",
+      "patterns": [
+        "I have a complaint",
+        "The driver was rude",
+        "I was overcharged",
+        "Report issue",
+        "Ride was bad"
+      ],
+      "responses": [
+        "Sorry to hear that. Please describe your issue.",
+        "We\u2019ll take action. Kindly tell us what happened."
+      ]
+    },
+    {
+      "tag": "faq_payment",
+      "patterns": [
+        "My payment failed",
+        "Refund not received",
+        "Transaction failed",
+        "Money deducted, no ride"
+      ],
+      "responses": [
+        "Please allow 5\u201310 minutes. If not resolved, contact support.",
+        "You may retry. If problem persists, we'll help through support."
+      ]
+    },
+    {
+      "tag": "faq_cancel",
+      "patterns": [
+        "Why was I charged for cancelling?",
+        "Explain cancellation fee",
+        "Cancel charges",
+        "Was I charged wrongly?"
+      ],
+      "responses": [
+        "Cancellation fees depend on driver allocation. Please check app policy.",
+        "Fees apply if cancelled after driver is en route. Thanks for understanding."
+      ]
+    },
+    {
+      "tag": "faq_general",
+      "patterns": [
+        "Can I schedule a ride?",
+        "Can I change my destination?",
+        "Do you offer 24/7 service?",
+        "Can I book for someone else?"
+      ],
+      "responses": [
+        "Yes, all those options are available. Tell me how I can help.",
+        "Absolutely! SmartBot supports scheduling and booking for others too."
+      ]
+    },
+    {
+      "tag": "help",
+      "patterns": [
+        "Help",
+        "I need help",
+        "Support",
+        "What can you do?",
+        "Assist me"
+      ],
+      "responses": [
+        "I can help you book a ride, track fare, change ride details, and more. Try saying: Book a ride.",
+        "Here to help! Ask me to book a ride, cancel, check fare, or raise a complaint."
+      ]
+    }
+  ]
+}

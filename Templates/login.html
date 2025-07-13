@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SmartBot - Login</title>
+  <style>
+    body {
+      background: #c3e1ff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #007bff;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .toggle-link {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="login-box">
+  <h1 style="text-align:center; margin-bottom: 10px; color:#343a40;">🚖 AI SmartBot 🚖</h1>
+  <h2>{{ 'Register' if register else 'Login' }}</h2>
+  <form method="post">
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="password" name="pin" placeholder="4-digit PIN" pattern="\d{4}" required />
+    <button type="submit">{{ 'Register' if register else 'Login' }}</button>
+  </form>
+  {% if not register %}
+    <a href="{{ url_for('register') }}" class="toggle-link">Create an account</a>
+  {% else %}
+    <a href="{{ url_for('login') }}" class="toggle-link">Back to login</a>
+  {% endif %}
+</div>
+
+</body>
+</html>
