@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>SmartBot Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -15,6 +16,25 @@
       color: white;
       padding: 20px;
       text-align: center;
+      position: relative;
+    }
+
+    .logout {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: white;
+      border: 1px solid #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .logout:hover {
+      background-color: #0056b3;
+      color: white;
     }
 
     .container {
@@ -24,6 +44,7 @@
     h2 {
       margin-top: 40px;
       color: #333;
+      font-size: 22px;
     }
 
     table {
@@ -38,6 +59,7 @@
       padding: 12px;
       border: 1px solid #ccc;
       text-align: left;
+      font-size: 14px;
     }
 
     th {
@@ -45,22 +67,30 @@
       color: white;
     }
 
-    .logout {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      background: white;
-      border: 1px solid #007bff;
-      padding: 8px 16px;
-      border-radius: 4px;
-      color: #007bff;
-      cursor: pointer;
-      text-decoration: none;
+    @media (max-width: 768px) {
+      th, td {
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      .logout {
+        padding: 6px 12px;
+        font-size: 13px;
+        top: 16px;
+        right: 20px;
+      }
     }
 
-    .logout:hover {
-      background-color: #007bff;
-      color: white;
+    @media (max-width: 480px) {
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
     }
   </style>
 </head>
@@ -90,47 +120,47 @@
     </table>
 
     <!-- 🚗 Ride Bookings -->
-<h2>Ride Bookings</h2>
+    <h2>Ride Bookings</h2>
+    <table>
+      <tr>
+        <th>Ride ID</th>
+        <th>User</th>
+        <th>Pickup</th>
+        <th>Drop</th>
+        <th>Type</th>
+        <th>Fare (₹)</th>
+        <th>Booked At</th>
+      </tr>
+      {% for ride in rides %}
+      <tr>
+        <td>{{ ride.ride_id }}</td>
+        <td>{{ ride.username }}</td>
+        <td>{{ ride.pickup }}</td>
+        <td>{{ ride.drop_location }}</td>
+        <td>{{ ride.ride_type }}</td>
+        <td>{{ ride.fare }}</td>
+        <td>{{ ride.timestamp }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <!-- 🛑 Complaints -->
+<h2>User Complaints</h2>
 <table>
   <tr>
-    <th>Ride ID</th>
-    <th>User</th>
-    <th>Pickup</th>
-    <th>Drop</th>
-    <th>Type</th>
-    <th>Fare (₹)</th>
-    <th>Booked At</th>
+    <th>Username</th>
+    <th>Description</th>
+    <th>Submitted At</th>
   </tr>
-  {% for ride in rides %}
+  {% for c in complaints %}
   <tr>
-    <td>{{ ride.ride_id }}</td>
-    <td>{{ ride.username }}</td>
-    <td>{{ ride.pickup }}</td>
-    <td>{{ ride.drop_location }}</td>
-    <td>{{ ride.ride_type }}</td>
-    <td>{{ ride.fare }}</td>
-    <td>{{ ride.timestamp }}</td>
+    <td>{{ c.username }}</td>
+    <td>{{ c.message }}</td>
+    <td>{{ c.timestamp }}</td>
   </tr>
   {% endfor %}
 </table>
 
-
-    <!-- 🛑 Complaints -->
-    <h2>User Complaints</h2>
-    <table>
-      <tr>
-        <th>User ID</th>
-        <th>Description</th>
-        <th>Submitted At</th>
-      </tr>
-      {% for c in complaints %}
-      <tr>
-        <td>{{ c.user_id }}</td>
-        <td>{{ c.message }}</td>
-        <td>{{ c.timestamp }}</td>
-      </tr>
-      {% endfor %}
-    </table>
   </div>
 
 </body>

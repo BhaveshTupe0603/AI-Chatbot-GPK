@@ -1,375 +1,374 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SmartBot - Ride Assistant</title>
+  <title>SmartBot - ChatBot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- ✅ Leaflet CSS for Map -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
       height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #f8f9fa, #e9ecef);
+      flex-direction: column;
     }
 
-    
+    #chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+    }
 
-    /* 🚖 Header */
 #chat-header {
   background-color: #007bff;
   color: white;
-  padding: 15px;
-  text-align: center;
+  padding: 12px;
   font-size: 20px;
-}
-
-/* 💬 Chat container */
-#chat-box {
-  flex: 1;
-  overflow-y: auto;
-  background-color: #d8d6bc;
-  padding: 15px;
   display: flex;
-  flex-direction: column;
-}
-
-/* 💬 Message bubbles */
-.message {
-  max-width: 70%;
-  padding: 10px 14px;
-  margin: 8px 0;
-  border-radius: 16px;
-  line-height: 1.5;
-  font-size: 15px;
-  display: inline-block;
-  word-wrap: break-word;
-}
-
-.user {
-  background-color: #dcf8c6;
-  color: #000;
-  align-self: flex-end;
-  border-bottom-right-radius: 0;
-}
-
-.bot {
-  background-color: #f1f0f0;
-  color: #000;
-  align-self: flex-start;
-  border-bottom-left-radius: 0;
-}
-
-/* 💬 Input bar at bottom */
-#chat-input {
-  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
   position: sticky;
-  bottom: 0;
-  z-index: 10;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-/* 🧾 Input field */
-#user-input {
-  flex: 1;
-  padding: 8px 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  outline: none;
-}
-
-/* 🚀 Send and mic buttons */
-#chat-input button {
-  margin-left: 10px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 20px;
-  background-color: #00b496;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-#chat-input button:hover {
-  background-color: #007e77;
-}
-
-  
-
-
-    #user-controls {
-    padding: 10px;
-    text-align: center;
-    background: #f0f0f0;
-  }
-
-  #user-controls button {
-    margin: 5px;
-    padding: 8px 14px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  #user-controls button:hover {
-    background-color: #0056b3;
-  }
-
-  .card {
-    display: none;
-  max-height: 300px;          /* 💡 Adjust as needed */
-  overflow-y: auto;           /* ✅ Enables scroll */
-  padding: 10px;
-  background: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-top: 10px;
-  }
-  .modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.5);
-}
-
-.modal-content {
-  background-color: white;
-  margin: 15% auto;
-  padding: 20px;
-  width: 400px;
-  border-radius: 10px;
+.menu-container {
   position: relative;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  display: inline-block;
 }
 
-.close {
-  position: absolute;
-  right: 10px;
-  top: 8px;
+.menu-btn {
+  background: none;
+  border: none;
+  color: white;
   font-size: 24px;
   cursor: pointer;
 }
 
-#main-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 20px;
-  flex-wrap: wrap; /* mobile responsive */
-}
-
-/* 💬 Chatbot Container */
-#chat-container {
-  background: #fffedc;
-  border: 1px solid #fffedc;
-  border-radius: 10px;
-  width: 700px;
-  height: 85vh;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 1001;
+  border-radius: 6px;
   overflow: hidden;
 }
 
-/* 🗺️ Map Container */
-#map {
-  height: 500px;
-  width: 500px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.dropdown a {
+  color: black;
+  padding: 10px 16px;
+  text-decoration: none;
+  display: block;
 }
 
-/* 📱 Mobile Responsive */
-@media (max-width: 768px) {
-  #main-wrapper {
-    flex-direction: column;
-    align-items: center;
+.dropdown a:hover {
+  background-color: #f1f1f1;
+}
+
+    #user-controls {
+      background: #f1f1f1;
+      text-align: right;
+      padding: 10px;
+    }
+
+    #user-controls button {
+      background-color: #007bff;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    #chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      background-color: #e7f2ff;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 14px;
+      font-size: 15px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .user {
+      align-self: flex-end;
+      background-color: #dcf8c6;
+      border-bottom-right-radius: 0;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background-color: #f1f0f0;
+      border-bottom-left-radius: 0;
+    }
+
+    #chat-input {
+      display: flex;
+      padding: 10px;
+      background: #ffffff;
+      border-top: 1px solid #ccc;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      outline: none;
+    }
+
+    #chat-input button {
+      margin-left: 8px;
+      background-color: #00b496;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    #chat-input button:hover {
+      background-color: #007e77;
+    }
+
+    #map {
+      display: none;
+      height: 300px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    #toggle-map-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      margin: 10px auto;
+      display: block;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      #chat-header {
+        font-size: 18px;
+      }
+      #chat-input button {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+    }
+    .card {
+    display: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   }
 
-  #chat-container,
-  #map {
+  #complaint-text {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    font-size: 15px;
+  }
+  /* 🔧 Centered and full-screen modal overlay */
+  .modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+
+  /* 📦 Modal content box */
+  .modal-content {
+    background-color: white;
     width: 90%;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
-}
-#top-bar {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  z-index: 999;
+
+  /* ❌ Close button */
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+  }
+  .modal {
+  transition: opacity 0.3s ease-in-out;
 }
 
-#top-bar button {
-  background-color: #007bff;
+ #suggestions {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  justify-content: center;
+}
+
+#suggestions button {
+  padding: 6px 12px;
+  background: #007bff;
   color: white;
-  padding: 8px 16px;
   border: none;
-  font-size: 14px;
   border-radius: 20px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
 }
 
-#top-bar button:hover {
-  background-color: #0056b3;
+#suggestions button:hover {
+  background: #0056b3;
 }
+
 
   </style>
 </head>
-
 <body>
-  <!-- 🔗 Profile Button (Top-right) -->
-<div id="top-bar">
-  <button onclick="location.href='/profile'">👤 Profile</button>
+<div id="chat-header">
+  <span>🚖 CHATBOT</span><small>👋 Welcome, {{ username }}!</small>
+  <div class="menu-container">
+    <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+    <div class="dropdown" id="menu-dropdown">
+      <a href="#" onclick="clearChat()">🧹 Clear Chat</a>
+      <a href="/profile">👤 Profile</a>
+      <a href="/logout">🚪 Logout</a>
+    </div>
+  </div>
 </div>
 
-   <div id="main-wrapper">
 
-<div id="chat-container">
-
-  <!-- 🚖 Header -->
-  <div id="chat-header">
-    🚖 SmartBot - Ride Assistant<br>
-    <small>👋 Welcome, {{ username }}!</small>
-  </div>
-
-  <!-- 🔘 User Control Panel -->
-  <div id="user-controls">
-    <button onclick="location.href='/logout'">🔓 Logout</button>
-    <button onclick="toggleCard('history-card')">🕘 Chat History</button>
-    <button onclick="openModal('complaint-modal')">🛑 Complaint</button>
-    <button onclick="toggleCard('faq-card')">📘 FAQ</button>
-    <button onclick="clearChat()">🧹 Clear Chat</button>
-    <button onclick="toggleMap()">📍 Show Map</button>
-
-  </div>
-
-  <!-- 📋 Cards (Initially Hidden) -->
-  <div class="card" id="history-card" style="display: none;">
-    <h4>🕘 Your Chat History</h4>
-    <ul>
+    <div id="chat-box">
       {% for chat in chats %}
-        <li><strong>{{ chat['sender'].capitalize() }}:</strong> {{ chat['message'] }}</li>
+        <div class="message {{ chat['sender'] }}">{{ chat['message'] }}</div>
       {% endfor %}
-    </ul>
+    </div>
+
+    <button id="toggle-map-btn" onclick="toggleMap()">📍 Show Map</button>
+    <div id="map"></div>
+
+    <div id="suggestions">
+  <button onclick="sendSuggestion('Book a ride')">Book a ride</button>
+  <button onclick="sendSuggestion('What is Ride ID?')">What is Ride ID?</button>
+  <button onclick="sendSuggestion('What is Pickup Location?')">What is Pickup Location?</button>
+</div>
+
+    <div id="chat-input">
+      <input type="text" id="user-input" placeholder="Type or speak..." />
+      <button onclick="sendMessage()">Send</button>
+      <button onclick="startListening()">🎤</button>
+    </div>
   </div>
-  <div class="card" id="faq-card" style="display: none;">
-  <h4>📘 Frequently Asked Questions</h4>
-  <ul>
-    <li><strong>Q:</strong> How do I book a ride?<br>
-        <strong>A:</strong> Just type "Book a ride" and provide pickup and drop locations.</li>
+</div> <!-- end of chat-container -->
 
-    <li><strong>Q:</strong> Can I speak instead of typing?<br>
-        <strong>A:</strong> Yes! Click the 🎤 mic button and speak your message.</li>
-
-    <li><strong>Q:</strong> How do I cancel a ride?<br>
-        <strong>A:</strong> Just type "cancel my ride" or "I want to cancel".</li>
-
-    <li><strong>Q:</strong> How to check fare before booking?<br>
-        <strong>A:</strong> Fare is automatically shown after selecting ride type.</li>
-
-    <li><strong>Q:</strong> What ride options are available?<br>
-        <strong>A:</strong> You can choose: Auto, Bike, Car, Cab, Taxi, Scooter, Sedan, or SUV.</li>
-
-    <li><strong>Q:</strong> How do I confirm a booking?<br>
-        <strong>A:</strong> After fare is shown, type "yes" or "confirm".</li>
-
-    <li><strong>Q:</strong> How can I rebook my last ride?<br>
-        <strong>A:</strong> Just say "Rebook ride" to repeat your last booking.</li>
-
-    <li><strong>Q:</strong> What if the bot doesn’t understand me?<br>
-        <strong>A:</strong> Try to keep your message short and clear like “From A to B by Auto”.</li>
-  </ul>
   <!-- 🚨 Complaint Modal -->
-<div id="complaint-modal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('complaint-modal')">&times;</span>
-    <h3>🛑 Submit a Complaint</h3>
-    <textarea id="complaint-text" rows="4" style="width: 100%;" placeholder="Describe your issue..."></textarea>
-    <button onclick="submitComplaint()">Submit</button>
-  </div>
-</div>
-
-</div>
-
-
-  <!-- 💬 Chat History -->
-  <div id="chat-box">
-    {% for chat in chats %}
-      <div class="message {{ chat['sender'] }}">{{ chat['message'] }}</div>
-    {% endfor %}
+  <div id="complaint-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('complaint-modal')">&times;</span>
+      <h3>🛑 Submit a Complaint</h3>
+      <textarea id="complaint-text" rows="4" style="width: 100%;" placeholder="Describe your issue..."></textarea>
+     <button onclick="submitComplaint()">Submit</button>
+    </div>
   </div>
 
-  
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- 💬 Chat Input -->
-  <div id="chat-input">
-    <input type="text" id="user-input" placeholder="Type or speak your message..." autofocus />
-    <button onclick="sendMessage()">Send</button>
-    <button onclick="startListening()" title="Speak" style="margin-left: 5px;">🎤</button>
-  </div>
-
-</div>
-<!-- 🗺️ Map Container -->
-  <div id="map" style="display: none;"></div>
-</div>
-
-
-  <!-- ✅ JavaScript Section -->
   <script>
-    async function sendMessage() {
-      const input = document.getElementById("user-input");
-      const msg = input.value.trim();
-      if (!msg) return;
+    let map;
 
-      const chat = document.getElementById("chat-box");
-      chat.innerHTML += `<div class="message user">${msg}</div>`;
-      input.value = "";
+async function sendMessage() {
+    const input = document.getElementById("user-input");
+    const msg = input.value.trim();
+    if (!msg) return;
 
-      const res = await fetch("/chat", {
+    // ✅ Hide suggestions after first user message
+    const suggestionsDiv = document.getElementById("suggestions");
+    if (suggestionsDiv) {
+        suggestionsDiv.style.display = "none";
+    }
+
+    const chat = document.getElementById("chat-box");
+    chat.innerHTML += `<div class="message user">${msg}</div>`;
+    input.value = "";
+
+    const res = await fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg })
-      });
+    });
 
-      const data = await res.json();
-      const botReply = data.response;
-      chat.innerHTML += `<div class="message bot">${botReply}</div>`;
-      chat.scrollTop = chat.scrollHeight;
+    const data = await res.json();
+    const botReply = data.response;
 
-      speak(botReply);
+    chat.innerHTML += `<div class="message bot">${botReply}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+    speak(botReply);
 
-      // Show map if ride confirmed
-      if (botReply.includes("✅ Ride confirmed!")) {
+    // ✅ Complaint modal trigger
+    if (data.trigger && data.trigger === "open_complaint") {
+        openModal("complaint-modal");
+    }
+
+    // ✅ Map display on ride confirmation
+    if (botReply.includes("✅ Ride confirmed!")) {
         const fromMatch = botReply.match(/From: (.*)/i);
         const toMatch = botReply.match(/To: (.*)/i);
         if (fromMatch && toMatch) {
-          const pickup = fromMatch[1].trim().split("\n")[0];
-          const drop = toMatch[1].trim().split("\n")[0];
-          showMap(pickup, drop);
+            const pickup = fromMatch[1].trim().split("\n")[0];
+            const drop = toMatch[1].trim().split("\n")[0];
+            showMap(pickup, drop);
         }
-      }
     }
+}
+
+
+
+
 
     function startListening() {
       const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -383,7 +382,7 @@
       };
 
       recognition.onerror = (event) => {
-        alert("Voice recognition failed: " + event.error);
+        alert("Voice recognition error: " + event.error);
       };
 
       recognition.start();
@@ -396,120 +395,138 @@
       utterance.rate = 1;
       speechSynthesis.speak(utterance);
     }
-    
-    // Declare globally
-let map;  // 🟢 Global map instance
 
-function showMap(pickup, drop) {
-  document.getElementById("map").style.display = "block";
+    function toggleMap() {
+      const mapDiv = document.getElementById("map");
+      const btn = document.getElementById("toggle-map-btn");
 
-  // ✅ Remove old map if it exists
-  if (map) {
-    map.remove();
-  }
-
-  fetch(`/route?pickup=${pickup}&drop=${drop}`)
-    .then(res => res.json())
-    .then(data => {
-      let { pickup_coords, drop_coords, route_coords } = data;
-
-      const pickupLatLng = [pickup_coords[0], pickup_coords[1]];
-      const dropLatLng = [drop_coords[0], drop_coords[1]];
-      const routeLatLngs = route_coords.map(coord => [coord[0], coord[1]]);
-
-      // ✅ Initialize new map
-      map = L.map("map").setView(pickupLatLng, 13);
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 18
-      }).addTo(map);
-
-      const carIcon = L.icon({
-        iconUrl: '/static/images/car-icon.png',
-        iconSize: [40, 40],
-        iconAnchor: [20, 20]
-      });
-
-      L.marker(pickupLatLng).addTo(map).bindPopup("Pickup").openPopup();
-      L.marker(dropLatLng).addTo(map).bindPopup("Drop");
-
-      L.polyline(routeLatLngs, { color: "blue" }).addTo(map);
-
-      // 🚗 Animate car icon along the route
-      let index = 0;
-      const movingMarker = L.marker(routeLatLngs[0], { icon: carIcon }).addTo(map);
-
-      function animate() {
-        if (index < routeLatLngs.length) {
-          movingMarker.setLatLng(routeLatLngs[index]);
-          index++;
-          setTimeout(animate, 1500);
-        }
+      if (mapDiv.style.display === "none") {
+        mapDiv.style.display = "block";
+        btn.textContent = "📍 Hide Map";
+      } else {
+        mapDiv.style.display = "none";
+        btn.textContent = "📍 Show Map";
       }
-      animate();
-    });
-}
+    }
 
-    
-     window.onload = () => {
-    const chatBox = document.getElementById("chat-box");
-    chatBox.scrollTop = chatBox.scrollHeight;
-    
-  };
-  function toggleCard(id) {
-  const el = document.getElementById(id);
-  el.style.display = el.style.display === "none" ? "block" : "none";
-}
-  function openModal(id) {
-  document.getElementById(id).style.display = 'block';
+    function showMap(pickup, drop) {
+      if (map) map.remove();
+
+      fetch(`/route?pickup=${pickup}&drop=${drop}`)
+        .then(res => res.json())
+        .then(data => {
+          const { pickup_coords, drop_coords, route_coords } = data;
+
+          map = L.map("map").setView([pickup_coords[0], pickup_coords[1]], 13);
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(map);
+
+          const carIcon = L.icon({
+            iconUrl: "/static/images/car-icon.png",
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
+          });
+
+          L.marker([pickup_coords[0], pickup_coords[1]]).addTo(map).bindPopup("Pickup").openPopup();
+          L.marker([drop_coords[0], drop_coords[1]]).addTo(map).bindPopup("Drop");
+
+          const routeLatLngs = route_coords.map(coord => [coord[0], coord[1]]);
+          L.polyline(routeLatLngs, { color: "blue" }).addTo(map);
+
+          let index = 0;
+          const movingMarker = L.marker(routeLatLngs[0], { icon: carIcon }).addTo(map);
+          function animate() {
+            if (index < routeLatLngs.length) {
+              movingMarker.setLatLng(routeLatLngs[index]);
+              index++;
+              setTimeout(animate, 1500);
+            }
+          }
+          animate();
+        });
+    }
+
+
+    function openModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.style.display = 'flex';  // or 'block' depending on your layout
+    const textarea = modal.querySelector("textarea");
+    if (textarea) textarea.focus();  // Autofocus only when opened
+  }
 }
 
 function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.style.display = "none";
+
+    // Clear textarea when closing
+    const textarea = modal.querySelector("textarea");
+    if (textarea) textarea.value = "";
+  }
 }
 
-function submitComplaint() {
-  const text = document.getElementById("complaint-text").value.trim();
-  if (!text) return alert("Please write your complaint!");
 
-  fetch('/complaint', {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: text })
+
+
+  function submitComplaint() {
+    const text = document.getElementById("complaint-text").value.trim();
+    if (!text) {
+      alert("Please enter your complaint.");
+      return;
+    }
+
+    fetch('/complaint', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      closeModal("complaint-modal");
+      document.getElementById("complaint-text").value = "";
+    });
+  }
+  
+  window.onclick = function(event) {
+    const modal = document.getElementById("complaint-modal");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+function toggleMenu() {
+  const menu = document.getElementById("menu-dropdown");
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+// Hide menu if user clicks outside
+window.addEventListener("click", function(event) {
+  const menu = document.getElementById("menu-dropdown");
+  if (!event.target.matches('.menu-btn')) {
+    if (menu.style.display === "block") {
+      menu.style.display = "none";
+    }
+  }
+});
+
+// 🧹 Clear Chat via API
+function clearChat() {
+  fetch('/clear_chat', {
+    method: 'POST'
   })
   .then(res => res.json())
   .then(data => {
     alert(data.message);
-    closeModal('complaint-modal');
-    document.getElementById("complaint-text").value = "";
+    location.reload();
   });
 }
-   function clearChat() {
-    if (!confirm("Are you sure you want to delete your chat history?")) return;
-
-    fetch('/clear_chat', { method: 'POST' })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.message);
-        location.reload();  // Refresh page to reflect cleared chat
-      });
-  }
-  function toggleMap() {
-  const mapDiv = document.getElementById("map");
-  const btn = document.querySelector('button[onclick="toggleMap()"]');
-  if (mapDiv.style.display === "none") {
-    mapDiv.style.display = "block";
-    btn.textContent = "📍 Hide Map";
-  } else {
-    mapDiv.style.display = "none";
-    btn.textContent = "📍 Show Map";
-  }
+function sendSuggestion(text) {
+  document.getElementById("user-input").value = text;
+  sendMessage();
 }
 
 
   </script>
-
-  <!-- ✅ Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>

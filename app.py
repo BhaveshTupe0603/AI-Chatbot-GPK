@@ -8,6 +8,17 @@ import uuid
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = '123'  # ✅ Use a secure secret key in production
 
+
+
+
+# ----------------------
+# 🔌 SPLASH Functions
+# ----------------------
+@app.route('/splash')
+def splash():
+    return render_template('splash.html')
+
+
 # ----------------------
 # 🔌 Database Functions
 # ----------------------
@@ -23,9 +34,16 @@ def get_user(username):
     return user
 
 # ----------------------
-# 🏠 Home Page with Chat
+# 🏠 Splash as Homepage
 # ----------------------
 @app.route('/')
+def home():
+    return redirect(url_for('splash'))
+
+# ----------------------
+# 💬 Main Chat UI
+# ----------------------
+@app.route('/chat')
 def index():
     if 'username' not in session:
         return redirect(url_for('login'))
@@ -37,6 +55,7 @@ def index():
     ).fetchall()
 
     return render_template("index.html", username=session['username'], chats=chats)
+
 # ----------------------
 # 🛠️ Admin Dashboard
 # ----------------------
@@ -127,35 +146,49 @@ def chat():
     user_id = session.get('user_id')
     response_data = process_text_input(message)
 
-    # Support old and new return format
+    response = None
+    trigger = None
+
+    # ✅ Support new return format: (response, _, ride_data/trigger dict)
     if isinstance(response_data, tuple) and len(response_data) == 3:
         response, _, ride_data = response_data
 
-        # ✅ Save ride to DB
         if ride_data and user_id:
-            db = get_db()
-            db.execute("""
-                INSERT INTO rides (user_id, ride_id, pickup, drop_location, ride_type, fare)
-                VALUES (?, ?, ?, ?, ?, ?)
-            """, (
-                user_id,
-                ride_data['ride_id'],
-                ride_data['pickup'],
-                ride_data['drop'],
-                ride_data['ride_type'],
-                ride_data['fare']
-            ))
-            db.commit()
-    else:
-        response, _ = response_data  # fallback
+            # Save ride to DB if ride_id exists
+            if "ride_id" in ride_data:
+                db = get_db()
+                db.execute("""
+                    INSERT INTO rides (user_id, ride_id, pickup, drop_location, ride_type, fare)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (
+                    user_id,
+                    ride_data['ride_id'],
+                    ride_data['pickup'],
+                    ride_data['drop'],
+                    ride_data['ride_type'],
+                    ride_data['fare']
+                ))
+                db.commit()
 
-    # ✅ Save chat to DB
+            # ✅ If it's a special trigger like complaint
+            if "trigger" in ride_data:
+                trigger = ride_data["trigger"]
+
+    else:
+        response, _ = response_data  # Fallback to old format
+
+    # ✅ Save chat history
     db = get_db()
     db.execute("INSERT INTO chats (user_id, message, sender) VALUES (?, ?, ?)", (user_id, message, 'user'))
     db.execute("INSERT INTO chats (user_id, message, sender) VALUES (?, ?, ?)", (user_id, response, 'bot'))
     db.commit()
 
-    return jsonify({"response": response})
+    # ✅ Return response and optional trigger
+    result = {"response": response}
+    if trigger:
+        result["trigger"] = trigger
+
+    return jsonify(result)
 
 
 # ----------------------
@@ -202,7 +235,7 @@ def complaint():
         return jsonify({"status": "error", "message": "Empty complaint"}), 400
 
     db = get_db()
-    db.execute("INSERT INTO complaints (user_id, message) VALUES (?, ?)", (session['user_id'], message))
+    db.execute("INSERT INTO complaints (user_id, username, message) VALUES (?, ?, ?)",(session['user_id'], session.get('username'), message))
     db.commit()
 
     return jsonify({"status": "success", "message": "Complaint submitted successfully."})

@@ -136,6 +136,11 @@ def process_text_input(text):
     if any(word in clean_text for word in ["reset", "clear", "start over"]):
         reset_state()
         return "🔄 Ride info reset. Please start again.", False
+    
+    # ✅ Manual Complaint Trigger (before ML fallback)
+    if "complaint" in clean_text or "issue" in clean_text or "problem" in clean_text or "report" in clean_text:
+        return "🛑 Sorry to hear that. Please describe your issue below.", False, {"trigger": "open_complaint"}
+
 
         # ✅ Handle polite replies after reset like “thank you”
     if not any([chat_state["pickup"], chat_state["drop"], chat_state["ride_type"]]):
@@ -170,7 +175,9 @@ def process_text_input(text):
     seq = tokenizer.texts_to_sequences([text])
     padded = pad_sequences(seq, maxlen=20, truncating='post')
     prediction = model.predict(padded)
+    print("🧠 Predicted tag:", prediction, "->", label_encoder.inverse_transform([np.argmax(prediction)])[0])
     tag = label_encoder.inverse_transform([np.argmax(prediction)])[0]
+    
 
     # Intent-specific actions
     if tag == "cancel_ride":
@@ -189,6 +196,13 @@ def process_text_input(text):
 
     elif tag == "help":
         return "🧠 I can help you book a ride, check fare, cancel, or rebook. Just say 'Book a ride' to begin.", False
+
+    elif tag == "complaint":
+        return random.choice([
+            "🛑 Sorry to hear that. Please describe your issue below.",
+            "🛑 We'll take action. Kindly tell us what happened."
+        ]), False, {"trigger": "open_complaint"}
+
 
     # Regular fallback response
     for intent in intents["intents"]:
