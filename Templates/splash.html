@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Help & Support - SmartBot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #007bff, #00bcd4);
+      font-family: 'Arial', sans-serif;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    header {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .support-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding: 10px 0;
+      cursor: pointer;
+    }
+
+    .faq-question {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .faq-answer {
+      font-size: 14px;
+      color: #f0f0f0;
+      display: none; 
+      margin-top: 5px;
+    }
+
+    /* Splash button fixed bottom-right */
+    .splash-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      color: #007bff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .splash-btn:hover {
+      background: #e0f7fa;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>Help & Support</header>
+
+  <div class="support-box">
+    <div class="faq-item" onclick="toggleAnswer(this)">
+      <div class="faq-question">❓ How do I book a ride?</div>
+      <div class="faq-answer">Simply type "Book a ride" in the chat, provide your pickup and drop locations, choose a ride type, and confirm.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+      <div class="faq-question">❓ How is the fare calculated?</div>
+      <div class="faq-answer">Fare is based on distance, ride type, and base rates. An estimated fare is shown before booking.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+      <div class="faq-question">❓ What if I face an issue during or after the ride?</div>
+      <div class="faq-answer">You can open the complaint form in the chatbot by saying "I have a complaint". Our support team will review it.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+      <div class="faq-question">❓ How can I cancel a ride? Will I be charged?</div>
+      <div class="faq-answer">Type "Cancel ride [Ride ID]" to cancel. No charges apply for cancellations before the ride starts.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+      <div class="faq-question">❓ Is my location shared during a trip?</div>
+      <div class="faq-answer">Yes, but only with your assigned driver for navigation purposes. It is never shared with anyone else.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+      <div class="faq-question">❓ How does the 'Refer and Earn' work?</div>
+      <div class="faq-answer">Share your referral code with friends. Once they complete their first ride, you earn credits for discounts.</div>
+    </div>
+  </div>
+
+  <button class="splash-btn" onclick="window.location.href='/login'">🔐</button>
+
+  <script>
+    function toggleAnswer(element) {
+      const answer = element.querySelector(".faq-answer");
+      answer.style.display = answer.style.display === "block" ? "none" : "block";
+    }
+  </script>
+
+</body>
+</html>
